@@ -9,4 +9,5 @@
     <string name="email_login">Login</string>
     <string name="or_text">Or</string>
     <string name="create_account_text">Create Account</string>
+    <string name="username_hint">Username</string>
 </resources>
