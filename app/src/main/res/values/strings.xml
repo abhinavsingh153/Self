@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Self</string>
+    <string name="text_title">Self . Gratitude . Journal</string>
+    <string name="get_started_text">Get Sarted</string>
+    <string name="grateful_text">What are you grateful for today?</string>
 </resources>
