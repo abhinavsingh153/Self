@@ -13,7 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".JournalListActivity"></activity>
-        <activity android:name=".SampleActivity" />
         <activity android:name=".PostJournalActivity"></activity>
         <activity android:name=".CreateAccountActivity" />
         <activity android:name=".LoginActivity" />

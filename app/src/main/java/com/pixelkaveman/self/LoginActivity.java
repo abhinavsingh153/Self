@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                                                         //Go to ListActivity
                                                         startActivity(new Intent(LoginActivity.this,
-                                                                PostJournalActivity.class));
+                                                                JournalListActivity.class));
 
 
                                                     }
