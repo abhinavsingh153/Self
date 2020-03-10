@@ -34,7 +34,7 @@ import util.JournalApi;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG ="loginActivity" ;
+    private static final String TAG = "loginActivity";
     private Button loginButton;
     private Button createAccountButton;
     private AutoCompleteTextView emailAddress;
@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference collectionReference = db.collection("Users");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +60,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         password = findViewById(R.id.password);
         progressBar = findViewById(R.id.login_progress);
         loginButton = findViewById(R.id.email_login_button);
-        createAccountButton =findViewById(R.id.create_acc_button_login);
+        createAccountButton = findViewById(R.id.create_acc_button_login);
 
         loginButton.setOnClickListener(this);
         createAccountButton.setOnClickListener(this);
@@ -68,11 +69,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
 
-        switch (view.getId()){
+        switch (view.getId()) {
 
             case R.id.email_login_button:
                 loginEmailPasswordUser(emailAddress.getText().toString().trim()
-                ,password.getText().toString().trim());
+                        , password.getText().toString().trim());
                 break;
 
             case R.id.create_acc_button_login:
@@ -82,8 +83,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-    private void loginEmailPasswordUser(String email , String password){
-
+    private void loginEmailPasswordUser(String email, String password) {
 
 
         progressBar.setVisibility(View.VISIBLE);
@@ -94,44 +94,46 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            assert user != null;
-                            final String currentUserId = user.getUid();
 
-                            collectionReference
-                                    .whereEqualTo("userId", currentUserId)
-                                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots,
-                                                            @Nullable FirebaseFirestoreException e) {
+                            if (task.isSuccessful()) {
+                                FirebaseUser user = firebaseAuth.getCurrentUser();
+                                assert user != null;
+                                final String currentUserId = user.getUid();
+                                collectionReference
+                                        .whereEqualTo("userId", currentUserId)
+                                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots,
+                                                                @Nullable FirebaseFirestoreException e) {
 
-                                            if (e != null) {
-                                            }
-                                            assert queryDocumentSnapshots != null;
-                                            if (!queryDocumentSnapshots.isEmpty()) {
+                                                if (e != null) {
+                                                }
+                                                assert queryDocumentSnapshots != null;
+                                                if (!queryDocumentSnapshots.isEmpty()) {
 
-                                                progressBar.setVisibility(View.INVISIBLE);
-                                                for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                                    JournalApi journalApi = JournalApi.getInstance();
-                                                    journalApi.setUsername(snapshot.getString("username"));
-                                                    journalApi.setUserId(snapshot.getString("userId"));
+                                                    progressBar.setVisibility(View.INVISIBLE);
+                                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                                        JournalApi journalApi = JournalApi.getInstance();
+                                                        journalApi.setUsername(snapshot.getString("username"));
+                                                        journalApi.setUserId(snapshot.getString("userId"));
 
-                                                    //Go to ListActivity
-                                                    startActivity(new Intent(LoginActivity.this,
-                                                            PostJournalActivity.class));
+                                                        //Go to ListActivity
+                                                        startActivity(new Intent(LoginActivity.this,
+                                                                PostJournalActivity.class));
+
+
+                                                    }
 
 
                                                 }
 
-
-
                                             }
+                                        });
 
-                                        }
-                                    });
+                            } else {
+                                Toast.makeText(LoginActivity.this, "Please enter correct email and password.", Toast.LENGTH_LONG).show();
 
-
-
+                            }
 
                         }
                     })
@@ -144,8 +146,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     });
 
 
-
-        }else {
+        } else {
 
             progressBar.setVisibility(View.INVISIBLE);
             Toast.makeText(LoginActivity.this,
@@ -156,8 +157,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-    private void loadCreateAccountActivity(){
-        Intent intent = new Intent(this , CreateAccountActivity.class);
+    private void loadCreateAccountActivity() {
+        Intent intent = new Intent(this, CreateAccountActivity.class);
         startActivity(intent);
     }
+
+
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//
+//        currentUser = firebaseAuth.getCurrentUser();
+//        firebaseAuth.addAuthStateListener(authStateListener);
+//    }
 }
